@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 namespace TestingLib;
@@ -25,6 +26,9 @@ public readonly struct Currency : IEquatable<Currency>
     {
         return $"{Code} ({Symbol})";
     }
+    public static bool operator ==(Currency a, Currency b) => a.Equals(b);
+    public static bool operator !=(Currency a, Currency b) => !a.Equals(b);
+
     public override bool Equals(object? obj)
        => obj is Currency other && Equals(other);
     public bool Equals(Currency other) => other.Code == Code;
