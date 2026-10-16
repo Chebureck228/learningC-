@@ -104,6 +104,9 @@ public class Wallet
     private Money[] _balances = new Money[4];
     private int _count;
     public int Count => _count;
+
+    public delegate void BalanceChangedHandler(Money other);
+    public event BalanceChangedHandler? BalanceChanged;
     public Currency[] Currencies
     {
         get
@@ -144,10 +147,19 @@ public class Wallet
                 _balances = newBalances;
             }
             _balances[_count] = money;
+            BalanceChanged?.Invoke(_balances[_count]);
             _count++;
         }
         else
+        {
             _balances[tempIdx] = _balances[tempIdx] + money;
+            BalanceChanged?.Invoke(_balances[tempIdx]);
+        }
+    }
+
+    public void operator +=(Money other)
+    {
+        Add(other);
     }
 
     public void Remove(Money money)
@@ -158,6 +170,7 @@ public class Wallet
         if (_balances[tempIdx] < money)
             throw new InsufficientFundsException(_balances[tempIdx], money);
         _balances[tempIdx] -= money;
+        BalanceChanged?.Invoke(_balances[tempIdx]);
     }
 
     public Money GetBalance(Currency currency)
