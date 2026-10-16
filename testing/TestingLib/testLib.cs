@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 namespace TestingLib;
 
@@ -61,9 +59,8 @@ public readonly struct Money : IComparable<Money>, IEquatable<Money>
     {
         if (!a.Currency.Equals(b.Currency))
             throw new InvalidOperationException($"Cannot subtract {a} and {b}: different currencies");
-        if (a.Amount - b.Amount < 0)
-            throw new InvalidOperationException("It is not possible to obtain " +
-            $"a negative balance for the Money object.: {a} - {b}");
+        if (a.Amount < b.Amount)
+            throw new InvalidOperationException($"Cannot subtract {b} from {a}: result would be negative");
         return new Money(a.Amount - b.Amount, a.Currency);
     }
 
@@ -156,15 +153,11 @@ public class Wallet
     public void Remove(Money money)
     {
         int tempIdx = IndexOf(money.Currency);
-        if (tempIdx != -1)
-        {
-            if (_balances[tempIdx].Amount - money.Amount >= 0)
-            {
-                _balances[tempIdx] = _balances[tempIdx] - money;
-                return;
-            }
-        }
-        throw new InvalidOperationException("Нельзя вычесть указанную сумму из баланса");
+        if (tempIdx == -1)
+            throw new InsufficientFundsException(new Money(0, money.Currency), money);
+        if (_balances[tempIdx] < money)
+            throw new InsufficientFundsException(_balances[tempIdx], money);
+        _balances[tempIdx] -= money;
     }
 
     public Money GetBalance(Currency currency)
@@ -178,14 +171,13 @@ public class Wallet
 
 public class InsufficientFundsException : Exception
 {
-    public Money Available { get; set; }
-    public Money Requested { get; set; }
+    public Money Available { get; }
+    public Money Requested { get; }
+    public Currency Currency => Requested.Currency;
 
     public InsufficientFundsException(Money available, Money requested)
         : base($"Insufficient funds: {available} available, {requested} requested")
     {
-        if (available.Currency != requested.Currency)
-            throw new ArgumentException("The currencies does not match.");
         Available = available;
         Requested = requested;
     }
