@@ -10,7 +10,7 @@ class Program
         Check("ноль == DescribeIf(0)", $"ноль", DescribeIf(0));
         Check($"число 101 == DescribeIf(101)", "число 101", DescribeIf(101));
         Check($"пустая строка == DescribeIf(\"\")", "пустая строка", DescribeIf(""));
-        Check($"строка длиной {"hello".Length} == DescribeIf(\"hello\")", 
+        Check($"строка длиной \"hello\".Length == DescribeIf(\"hello\")", 
                 $"строка длиной {"hello".Length}", DescribeIf("hello"));
         Check($"дробное 5.4 == DescribeIf(5.4)", "дробное 5,4", DescribeIf(5.4));
         Check($"пусто == DescribeIf(null)", "пусто", DescribeIf(null));
@@ -19,7 +19,7 @@ class Program
         Check("ноль == DescribeSwitch(0)", $"ноль", DescribeSwitch(0));
         Check($"число 101 == DescribeSwitch(101)", "число 101", DescribeSwitch(101));
         Check($"пустая строка == DescribeSwitch(\"\")", "пустая строка", DescribeSwitch(""));
-        Check($"строка длиной {"hello".Length} == DescribeSwtich(\"hello\")", 
+        Check($"строка длиной \"hello\".Length == DescribeSwtich(\"hello\")", 
                 $"строка длиной {"hello".Length}", DescribeSwitch("hello"));
         Check($"дробное 5.4 == DescribeSwitch(5.4)", "дробное 5,4", DescribeSwitch(5.4));
         Check($"пусто == DescribeSwitch({null})", "пусто", DescribeSwitch(null));
