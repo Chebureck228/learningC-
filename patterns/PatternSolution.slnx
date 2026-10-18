@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PatternLearning/PatternLearning.csproj" />
+  <Project Path="PatternLib/PatternLib.csproj" />
+</Solution>
